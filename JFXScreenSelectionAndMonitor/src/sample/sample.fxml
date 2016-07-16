@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="25.0" minHeight="16.0" prefHeight="25.0" />
+      <RowConstraints maxHeight="9.0" minHeight="0.0" prefHeight="0.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+   <children>
+      <Button mnemonicParsing="false" onAction="#select" text="Select screen region" />
+      <Button mnemonicParsing="false" onAction="#monitorSelection" prefHeight="25.0" prefWidth="124.0" text="Monitor selection" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="123.0" text="save" GridPane.rowIndex="7" />
+      <Button mnemonicParsing="false" onAction="#load" prefHeight="25.0" prefWidth="124.0" text="load" GridPane.rowIndex="9" />
+      <Button mnemonicParsing="false" onAction="#test" prefHeight="25.0" prefWidth="123.0" text="Test" GridPane.rowIndex="6" />
+      <Label prefHeight="17.0" prefWidth="227.0" text="Start Screen Selection - Required" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+      <Label prefHeight="17.0" prefWidth="239.0" text="Monitor Screen selection [visible] / Debugg" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#monitorSelectionInvis" prefHeight="25.0" prefWidth="122.0" text="Monitor selection" GridPane.rowIndex="3" />
+      <Label prefHeight="17.0" prefWidth="242.0" text="Monitor Screen selection [invisible]" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <Label prefHeight="17.0" prefWidth="236.0" text="For testing stuff" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <Label prefHeight="17.0" prefWidth="234.0" text="Saves screen region information" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+      <Label prefHeight="17.0" prefWidth="229.0" text="Loads screen region information" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+   </children>
+</GridPane>
