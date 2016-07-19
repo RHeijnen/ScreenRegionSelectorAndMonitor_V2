@@ -192,4 +192,18 @@ public class SelectionInformationContainer implements Serializable {
         }
         return ammountOfColorPixels;
     }
+
+    public boolean doColorsMatch(int offset){
+        int pixelCount = 0;
+        for(int i = 0; i < getSelectionPixelList().size();i++){
+            if(getSelectionPixelList().get(i).equals(getSelectionRefreshedPixelList().get(i))){
+                pixelCount++;
+            }
+        }
+        if(pixelCount == getSelectionPixelAmmount()){
+            return true;
+        }
+        return false;
+    }
+
 }

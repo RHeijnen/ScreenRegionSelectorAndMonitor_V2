@@ -38,5 +38,8 @@
       <Label prefHeight="17.0" prefWidth="236.0" text="For testing stuff" GridPane.columnIndex="2" GridPane.rowIndex="6" />
       <Label prefHeight="17.0" prefWidth="234.0" text="Saves screen region information" GridPane.columnIndex="2" GridPane.rowIndex="7" />
       <Label prefHeight="17.0" prefWidth="229.0" text="Loads screen region information" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+      <Button mnemonicParsing="false" text="Button" />
+      <Button mnemonicParsing="false" onAction="#doComparison" prefHeight="25.0" prefWidth="123.0" text="Compare Screens" GridPane.rowIndex="5" />
+      <Label prefHeight="17.0" prefWidth="222.0" text="Sees if the original setup matches" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    </children>
 </GridPane>

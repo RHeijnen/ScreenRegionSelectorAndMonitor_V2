@@ -50,9 +50,9 @@ public class Controller {
 
     public void test(ActionEvent actionEvent) {
         System.out.print("pixel count/difference of 60,63,65  with offset 10: ");
-        System.out.println(selectionInformationContainer.getColorCountWithOffset(60,63,65,10));
+        System.out.println(selectionInformationContainer.getColorCountWithOffset(60,63,65,10)); // R G B OFFSET
         System.out.print("pixel count/difference of 60,63,65 with no offset: ");
-        System.out.println(selectionInformationContainer.getColorCount(60,63,65));
+        System.out.println(selectionInformationContainer.getColorCount(60,63,65)); // R G B
         System.out.print("Start X: ");
         System.out.println(selectionInformationContainer.getStartX());
         System.out.print("End X: ");
@@ -81,5 +81,9 @@ public class Controller {
     public void monitorSelectionInvis(ActionEvent actionEvent) {
         SelectionMonitor SM = new SelectionMonitor(selectionInformationContainer);
         SM.createMonitor();
+    }
+
+    public void doComparison(ActionEvent actionEvent) {
+        System.out.println(selectionInformationContainer.doColorsMatch(0));
     }
 }
