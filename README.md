@@ -34,12 +34,18 @@ visible monitor to update the selection, and let the user see what is actually h
 Functions :
 
 -=-= Selection information -=-=
-getScreen_width()                                          - returns screens width
+getScreen_width()                                          - returns screens width 
+
 getScreen_height()                                         - returns screen height
+
 getColorCountWithOffset(R,G,B, INT offset)                 - Returns number of pixels that match the RGB values, -/+ offset
+
 getColorCount(R,G,B)                                       - Returns number of pixels that match the RGB values
+
 getStartX()                                                - Returns the starting position (X as) of the selection
+
 getEndX()                                                  - Returns the ending position (X as) of the selection
+
 getStartY()                                                - Returns the starting position (Y as) of the selection
 getEndY()                                                  - Returns the ending position (Y as) of the selection
 getCenterLocationOfRectangle()                             - Returns array[2] containing X and Y values of selection's center
