@@ -140,8 +140,8 @@ public class SelectionInformationContainer implements Serializable {
     public int[] getCenterLocationOfRectangle (){
 
         int locations[] = new int[2];
-        int width = (int) getSelectionRectangle().getWidth();
-        int height =(int) getSelectionRectangle().getHeight();
+        int width  = (int) getSelectionRectangle().getWidth();
+        int height = (int) getSelectionRectangle().getHeight();
         locations[0] = getSelectionRectangle().x +(width/2);
         locations[1] = getSelectionRectangle().y +(height/2);
         return locations;
@@ -152,11 +152,9 @@ public class SelectionInformationContainer implements Serializable {
         return random;
     }
     public int[] getCenterLocationOfRectangleWithRandomOffset (int offset){
-
-
         int locations[] = new int[2];
-        int width = (int) getSelectionRectangle().getWidth();
-        int height =(int) getSelectionRectangle().getHeight();
+        int width  = (int) getSelectionRectangle().getWidth();
+        int height = (int) getSelectionRectangle().getHeight();
         locations[0] = getSelectionRectangle().x +(width/2)  + randomOffset(offset);
         locations[1] = getSelectionRectangle().y +(height/2) + randomOffset(offset);
         return locations;
@@ -200,10 +198,186 @@ public class SelectionInformationContainer implements Serializable {
                 pixelCount++;
             }
         }
-        if(pixelCount == getSelectionPixelAmmount()){
+        if(pixelCount+offset >= getSelectionPixelAmmount()){
             return true;
         }
         return false;
     }
 
+    public void debuggObject(String name){
+        System.out.println("=-=-=-=-"+name +" Data: "+"=-=-=-=-");
+        System.out.println("Screen width: "+getScreen_width());
+        System.out.println("Screen height: "+getScreen_height());
+        System.out.print("Start X: ");
+        System.out.println(getStartX());
+        System.out.print("End X: ");
+        System.out.println(getEndX());
+        System.out.print("Start Y: ");
+        System.out.println(getStartY());
+        System.out.print("End Y: ");
+        System.out.println(getEndY());
+        System.out.print("Center location of co-ordinates: ");
+        int locations[] = getCenterLocationOfRectangle();
+        System.out.print("X: "+locations[0]);
+        System.out.println(" Y: "+locations[1]);
+        System.out.print("Center location of co-ordinates with random(10) offset");
+        int locationsRandom[] = getCenterLocationOfRectangleWithRandomOffset(10);
+        System.out.print("X: "+locationsRandom[0]);
+        System.out.println(" Y: "+locationsRandom[1]);
+        System.out.print("Rectangle information:");
+        System.out.println(getSelectionRectangle());
+        System.out.print("Number of pixels selected: ");
+        System.out.println(getSelectionPixelAmmount());
+        System.out.println("Scanner is alive - "+isScannerIsLive());
+        System.out.println("=-=-=-=- Monitoring difference: =-=-=-=-");
+        System.out.print("Number of pixel that changed: ");
+        System.out.println(getSelectionPixelDifference());
+        System.out.println("=-=-=-=- end of: "+name+" =-=-=-=-");
+
+
+    }
+    public void debuggObjectWithColorValues(String name,int R,int G, int B, int offset){
+        System.out.println("=-=-=-=-"+name +" Data: "+"=-=-=-=-");
+        System.out.println("Screen width: "+getScreen_width());
+        System.out.println("Screen height: "+getScreen_height());
+        System.out.print("pixel count/difference of 60,63,65  with offset 10: ");
+        System.out.println(getColorCountWithOffset(R,G,B,offset)); // R G B OFFSET
+        System.out.print("pixel count/difference of 60,63,65 with no offset: ");
+        System.out.println(getColorCount(R,G,B)); // R G B
+        System.out.print("Start X: ");
+        System.out.println(getStartX());
+        System.out.print("End X: ");
+        System.out.println(getEndX());
+        System.out.print("Start Y: ");
+        System.out.println(getStartY());
+        System.out.print("End Y: ");
+        System.out.println(getEndY());
+        System.out.print("Center location of co-ordinates:");
+        int locations[] = getCenterLocationOfRectangle();
+        System.out.print(" X: "+locations[0]);
+        System.out.println(" Y: "+locations[1]);
+        System.out.print("Center location of co-ordinates with random(10) offset");
+        int locationsRandom[] = getCenterLocationOfRectangleWithRandomOffset(10);
+        System.out.print(" X: "+locationsRandom[0]);
+        System.out.println(" Y: "+locationsRandom[1]);
+        System.out.print("Rectangle information: ");
+        System.out.println(getSelectionRectangle());
+        System.out.print("Number of pixels selected: ");
+        System.out.println(getSelectionPixelAmmount());
+        System.out.println("Scanner is alive - "+isScannerIsLive());
+        System.out.println("=-=-=-=- Monitoring difference: =-=-=-=-");
+        System.out.print("Number of pixel that changed: ");
+        System.out.println(getSelectionPixelDifference());
+        System.out.println("=-=-=-=- end of: "+name+" =-=-=-=-");
+
+    }
+    // TODO WIP
+    public void findRegionsColorSpectrum(){
+        int  missingPixels =0,greyPixels = 0,blackPixels =0, whitePixels =0, greenPixels =0, bluePixels =0, redPixels =0,yellowPixels =0, lightBluePixels =0, purplePixels =0;
+        int pixelsize = getSelectionPixelAmmount();
+        for(int i = 0; i < pixelsize; i++){
+            Color temp = (Color) getSelectionPixelList().get(i);
+            int Red = temp.getRed();
+            int Green = temp.getGreen();
+            int Blue = temp.getBlue();
+            if(Red == Green && Red == Blue){
+                if(Red <= 40){
+                    blackPixels++;
+                }else if(Red < 220){
+                    greyPixels++;
+                }else{
+                    whitePixels++;
+                }
+            }else if (Blue > Red && Blue > Green){
+                // blue highest value
+                // sort color in a blue subcatagory
+                if(Green >= 125) {
+                    lightBluePixels++;
+                }else if(Green >= 200) {
+                   // verylightBluePixels++;
+                }else{
+                    bluePixels++;
+                }
+            }else if(Red > Blue && Red > Green){
+                // red highest value
+                // sort color in a red subcatagory
+                if(Green < Red ){
+                    purplePixels++;
+                }else{
+                    redPixels++;
+                }
+            }else if(Green > Red && Green > Blue){
+                // green highest value
+                // sort color in a green subcatagory
+                if( Green >= Blue*2 && Red >= Blue*2){
+                    yellowPixels++;
+                }else {
+                    greenPixels++;
+                }
+            }else{
+                missingPixels++;
+            }
+
+        }
+        System.out.println("grey: "+greyPixels);
+        System.out.println("white: "+whitePixels);
+        System.out.println("black: "+blackPixels);
+        System.out.println("green: "+greenPixels);
+        System.out.println("blue: "+bluePixels);
+        System.out.println("red: "+redPixels);
+        System.out.println("light blue: "+lightBluePixels);
+        System.out.println("yellow: "+yellowPixels);
+        System.out.println("purple: "+purplePixels);
+        System.out.println("missing pixeldata: "+missingPixels);
+    }
 }
+
+/*
+            if(Red >= Blue*2 && Green >= Blue*2){
+                yellowPixels++;
+            }else if(Red >= Green*2 && Blue >= Green*2){
+                purplePixels++;
+            } else if(Green >= Red*2 && Blue >= Red*2) {
+                turquoisePixels++;
+            } else
+
+
+            // try 2
+
+            if(Red < 40 && Green < 40 && Blue < 40){
+                 blackPixels++;
+            }else if(Red > 240 && Green > 240 && Blue > 240){
+                 whitePixels++;
+            }else if (Red > 40 && Red < 100 && Blue > 40 && Blue < 100 && Red > 40 && Red < 100 ){
+                greyPixels++;
+            }else if (Blue > Red && Blue > Green){
+                 // blue highest value
+                 // sort color in a blue subcatagory
+                 if(Blue >= Red*2 && Green >= Red*2) {
+                     turquoisePixels++;
+                 }else{
+                     bluePixels++;
+                 }
+            }else if(Red > Blue && Red > Green){
+                 // red highest value
+                 // sort color in a red subcatagory
+                 if(Red >= Green*2 && Blue >= Green*2){
+                     purplePixels++;
+                 }else{
+                     redPixels++;
+                 }
+            }else if(Green > Red && Green > Blue){
+                 // green highest value
+                 // sort color in a green subcatagory
+                 if( Green >= Blue*2 && Red >= Blue*2){
+                     yellowPixels++;
+                 }else {
+                     greenPixels++;
+                 }
+            }else{
+                System.out.println(temp);
+                missingPixels++;
+            }
+
+
+ */

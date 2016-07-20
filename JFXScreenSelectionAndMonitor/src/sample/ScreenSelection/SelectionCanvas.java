@@ -65,6 +65,25 @@ public class SelectionCanvas {
                 selectionInformationContainer.setStartY((int) getPointerInfo().getLocation().getY());
             }
         });
+        canvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                // drawing rectangle and removing it on draw
+                gc.clearRect( selectionInformationContainer.getStartX(),
+                        selectionInformationContainer.getStartY()+offset,
+                        (int) getPointerInfo().getLocation().getX() - selectionInformationContainer.getStartX() ,
+                        (int) getPointerInfo().getLocation().getY() - selectionInformationContainer.getStartY());
+                // set mouse selection background color and transparency
+                javafx.scene.paint.Color c = new javafx.scene.paint.Color(0, 0, 1.0, 0.3);
+                gc.setFill(c);
+                gc.fillRect(
+                        selectionInformationContainer.getStartX(),
+                        selectionInformationContainer.getStartY()+offset,
+                        (int) getPointerInfo().getLocation().getX() - selectionInformationContainer.getStartX() ,
+                        (int) getPointerInfo().getLocation().getY() - selectionInformationContainer.getStartY());
+            }
+        });
         canvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
 
             @Override
@@ -78,7 +97,7 @@ public class SelectionCanvas {
                         selectionInformationContainer.getStartY(),
                         selectionInformationContainer.getSelectionWidth(),selectionInformationContainer.getSelectionHeight()));
 
-                //  gc.fillRect(event.getSceneX(),event.getScreenY()+10,4,4);
+/*
                 javafx.scene.paint.Color c = new javafx.scene.paint.Color(0, 0, 1.0, 0.3);
 
                 gc.setFill(c);
@@ -86,7 +105,7 @@ public class SelectionCanvas {
                         selectionInformationContainer.getStartX(),
                         selectionInformationContainer.getStartY()+offset,
                         selectionInformationContainer.getSelectionWidth(),selectionInformationContainer.getSelectionHeight());
-
+*/
                 confirmationPopUp popup = new confirmationPopUp(stage);
                 popup.createWindow();
             }

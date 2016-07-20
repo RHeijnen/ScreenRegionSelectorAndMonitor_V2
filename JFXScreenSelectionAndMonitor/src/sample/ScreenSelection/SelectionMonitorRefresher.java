@@ -9,10 +9,10 @@ import java.util.TimerTask;
  * Created by Indi on 7/16/2016.
  */
 public class SelectionMonitorRefresher  extends TimerTask {
-    SelectionInformationContainer SIC;
-    Robot robot;
-    boolean runnable = true;
-    BufferedImage bf;
+    private SelectionInformationContainer SIC;
+    private Robot robot;
+    private boolean runnable = true;
+    private BufferedImage bf;
 
 
     public SelectionMonitorRefresher(SelectionInformationContainer SIC){
@@ -34,7 +34,8 @@ public class SelectionMonitorRefresher  extends TimerTask {
         for (int x = 0; x < bf.getWidth(); x++) {
             for (int y = 0; y < bf.getHeight(); y++) {
                 TEMP_Pixel_Array.add(i,new Color(bf.getRGB(x, y)));
-                if(!TEMP_Pixel_Array.equals(SIC.getSelectionPixelList().get(i))){
+                // TODO check double check
+                if(!TEMP_Pixel_Array.get(i).equals(SIC.getSelectionPixelList().get(i))){
                     changecounter++;
                 }
                 i++;
