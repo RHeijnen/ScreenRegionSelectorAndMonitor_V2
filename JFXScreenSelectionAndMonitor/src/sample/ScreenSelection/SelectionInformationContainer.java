@@ -1,6 +1,7 @@
 package sample.ScreenSelection;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,6 +22,8 @@ public class SelectionInformationContainer implements Serializable {
     private Rectangle selectionRectangle;
     private ArrayList selectionPixelList;
     private ArrayList selectionRefreshedPixelList;
+    private ArrayList<ArrayList> screenXasArray;
+    private ArrayList<ArrayList> selectionXasArray;
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private double Screen_width = screenSize.getWidth();
@@ -233,6 +236,18 @@ public class SelectionInformationContainer implements Serializable {
         System.out.print("Number of pixel that changed: ");
         System.out.println(getSelectionPixelDifference());
         System.out.println("=-=-=-=- end of: "+name+" =-=-=-=-");
+        System.out.println("...");
+        System.out.println("Screen canvas size");
+        System.out.println(screenXasArray.size());
+        System.out.println("Screen canvas Colors on Y255 X500");
+        System.out.println(screenXasArray.get(500).get(255));
+        System.out.println("...");
+        System.out.println("Selection canvas size");
+        System.out.println(selectionXasArray.size());
+        System.out.println(selectionXasArray.get(1).size());
+        System.out.println("Selection canvas");
+        System.out.println(selectionXasArray.get(5).get(5));
+
 
 
     }
@@ -280,6 +295,7 @@ public class SelectionInformationContainer implements Serializable {
             int Red = temp.getRed();
             int Green = temp.getGreen();
             int Blue = temp.getBlue();
+            //temp.
             if(Red == Green && Red == Blue){
                 if(Red <= 40){
                     blackPixels++;
@@ -329,6 +345,40 @@ public class SelectionInformationContainer implements Serializable {
         System.out.println("yellow: "+yellowPixels);
         System.out.println("purple: "+purplePixels);
         System.out.println("missing pixeldata: "+missingPixels);
+    }
+/*
+    public void scanScreenData(){
+        int temp_screenwidth = (int) getScreen_width();
+        int temp_screenheight = (int) getScreen_height();
+        BufferedImage BI = robot.createScreenCapture( new Rectangle(0,0,temp_screenwidth,temp_screenheight));
+
+        setScreenXasArray(new ArrayList(temp_screenheight));
+
+        for (int Yas = 0; Yas < temp_screenheight;Yas++){
+            // for every line on the screen
+            ArrayList temp_colorArray = new ArrayList(temp_screenwidth);
+            for(int Xas = 0; Xas < temp_screenwidth;Xas++ ){
+                // for every line on the screen, check its Xas co-ords
+                temp_colorArray.add(Xas,new Color(BI.getRGB(Xas, Yas)));
+            }
+            getScreenXasArray().add(temp_colorArray);
+        }
+    } */
+
+    public ArrayList getScreenXasArray() {
+        return screenXasArray;
+    }
+
+    public void setScreenXasArray(ArrayList screenXasArray) {
+        this.screenXasArray = screenXasArray;
+    }
+
+    public ArrayList<ArrayList> getSelectionXasArray() {
+        return selectionXasArray;
+    }
+
+    public void setSelectionXasArray(ArrayList<ArrayList> selectionXasArray) {
+        this.selectionXasArray = selectionXasArray;
     }
 }
 

@@ -23,6 +23,24 @@ public class SelectionMonitorRefresher  extends TimerTask {
             e.printStackTrace();
         }
     }
+    public void scanScreenData(){
+        int temp_screenwidth = (int) SIC.getScreen_width();
+        int temp_screenheight = (int) SIC.getScreen_height();
+        BufferedImage BI = robot.createScreenCapture( new Rectangle(0,0,temp_screenwidth,temp_screenheight));
+
+        SIC.setScreenXasArray(new ArrayList(temp_screenheight));
+
+        for (int Yas = 0; Yas < temp_screenheight;Yas++){
+            // for every line on the screen
+            ArrayList temp_colorArray = new ArrayList(temp_screenwidth);
+            for(int Xas = 0; Xas < temp_screenwidth;Xas++ ){
+                // for every line on the screen, check its Xas co-ords
+                temp_colorArray.add(Xas,new Color(BI.getRGB(Xas, Yas)));
+            }
+            SIC.getScreenXasArray().add(temp_colorArray);
+        }
+    }
+
     @Override
     public void run() {
         runnable = false; // guard
@@ -44,6 +62,7 @@ public class SelectionMonitorRefresher  extends TimerTask {
         SIC.setSelectionRefreshedPixelList(TEMP_Pixel_Array);
         //System.out.println(SIC.getSelectionRefreshedPixelList().get(4));
         SIC.setSelectionPixelDifference(changecounter);
+
         runnable = true; // guard
 
     }

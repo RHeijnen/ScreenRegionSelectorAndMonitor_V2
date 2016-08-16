@@ -28,6 +28,8 @@ public class SelectionCanvas {
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private double Screen_width = screenSize.getWidth();
     private double Screen_height = screenSize.getHeight();
+
+    private int selectionSelector = 0; // will be 1/2/3/4 and used in a switch to determine what the orientation is of the selection
     SelectionInformationContainer selectionInformationContainer;
     Robot robot;
 
@@ -38,8 +40,8 @@ public class SelectionCanvas {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-
     }
+
     public void DrawCanvas(){
         stage = new Stage();
         stage.initStyle(StageStyle.TRANSPARENT);
@@ -69,43 +71,68 @@ public class SelectionCanvas {
 
             @Override
             public void handle(MouseEvent event) {
-                // drawing rectangle and removing it on draw
-                gc.clearRect( selectionInformationContainer.getStartX(),
-                        selectionInformationContainer.getStartY()+offset,
-                        (int) getPointerInfo().getLocation().getX() - selectionInformationContainer.getStartX() ,
-                        (int) getPointerInfo().getLocation().getY() - selectionInformationContainer.getStartY());
-                // set mouse selection background color and transparency
+                gc.clearRect(0 ,
+                        0,
+                        Screen_width,
+                        Screen_height);
                 javafx.scene.paint.Color c = new javafx.scene.paint.Color(0, 0, 1.0, 0.3);
                 gc.setFill(c);
-                gc.fillRect(
-                        selectionInformationContainer.getStartX(),
-                        selectionInformationContainer.getStartY()+offset,
-                        (int) getPointerInfo().getLocation().getX() - selectionInformationContainer.getStartX() ,
-                        (int) getPointerInfo().getLocation().getY() - selectionInformationContainer.getStartY());
+                // if start selection values are HIGHER than drag values on Xas [DRAG RIGHT]
+                if ((int) getPointerInfo().getLocation().getX() > selectionInformationContainer.getStartX()){
+                    if (getPointerInfo().getLocation().getY() < selectionInformationContainer.getStartY()){
+                        //if start selection values are HIGHER than drag values on Yas [DRAG UP]
+                        gc.fillRect(
+                                selectionInformationContainer.getStartX(),
+                                (int) getPointerInfo().getLocation().getY()+offset,
+                                (int) getPointerInfo().getLocation().getX() - selectionInformationContainer.getStartX() ,
+                                selectionInformationContainer.getStartY() - (int) getPointerInfo().getLocation().getY()
+                        );
+                        selectionSelector = 1;
+                    }else if((int) getPointerInfo().getLocation().getY() > selectionInformationContainer.getStartY()) {
+                        //if start selection values are LOWER than drag values on Yas [DRAG DOWN]
+                        gc.fillRect( // DONE
+                                selectionInformationContainer.getStartX(),
+                                selectionInformationContainer.getStartY()+offset,
+                                (int) getPointerInfo().getLocation().getX() - selectionInformationContainer.getStartX() ,
+                                (int) getPointerInfo().getLocation().getY() - selectionInformationContainer.getStartY()
+                        );
+                        selectionSelector = 2;
+                    }
+
+                    // if start selection values are LOWER than drag values on Xas [DRAG LEFT]
+                }else if ((int) getPointerInfo().getLocation().getX() < selectionInformationContainer.getStartX()) {
+                    if (getPointerInfo().getLocation().getY() < selectionInformationContainer.getStartY()){
+                        //if start selection values are HIGHER than drag values on Yas [DRAG UP]
+                        gc.fillRect( // DONE
+                                (int) getPointerInfo().getLocation().getX(),
+                                (int) getPointerInfo().getLocation().getY() + offset,
+                                selectionInformationContainer.getStartX() - (int) getPointerInfo().getLocation().getX(),
+                                selectionInformationContainer.getStartY() - (int) getPointerInfo().getLocation().getY()
+                        );
+                        selectionSelector = 3;
+                    // end if top right bot left
+                    }else if ((int) getPointerInfo().getLocation().getY() > selectionInformationContainer.getStartY()) {
+                        //if start selection values are LOWER than drag values on Yas [DRAG DOWN]
+                        gc.fillRect( // DONE
+                                (int) getPointerInfo().getLocation().getX(),
+                                selectionInformationContainer.getStartY() + offset,
+                                selectionInformationContainer.getStartX() - (int) getPointerInfo().getLocation().getX(),
+                                (int) getPointerInfo().getLocation().getY() - selectionInformationContainer.getStartY()
+                        );
+                        selectionSelector = 4;
+
+                    }
+                }
+
+
             }
         });
         canvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-                selectionInformationContainer.setEndX((int) getPointerInfo().getLocation().getX());
-                selectionInformationContainer.setEndY((int) getPointerInfo().getLocation().getY());
-                selectionInformationContainer.setSelectionWidth(selectionInformationContainer.getEndX() - selectionInformationContainer.getStartX());
-                selectionInformationContainer.setSelectionHeight(selectionInformationContainer.getEndY() - selectionInformationContainer.getStartY());
-                selectionInformationContainer.setSelectionPixelAmmount(selectionInformationContainer.getSelectionWidth() * selectionInformationContainer.getSelectionHeight());
-                selectionInformationContainer.setSelectionRectangle(new Rectangle(selectionInformationContainer.getStartX(),
-                        selectionInformationContainer.getStartY(),
-                        selectionInformationContainer.getSelectionWidth(),selectionInformationContainer.getSelectionHeight()));
-
-/*
-                javafx.scene.paint.Color c = new javafx.scene.paint.Color(0, 0, 1.0, 0.3);
-
-                gc.setFill(c);
-                gc.fillRect(
-                        selectionInformationContainer.getStartX(),
-                        selectionInformationContainer.getStartY()+offset,
-                        selectionInformationContainer.getSelectionWidth(),selectionInformationContainer.getSelectionHeight());
-*/
+                setData(selectionSelector);
+                // cut
                 confirmationPopUp popup = new confirmationPopUp(stage);
                 popup.createWindow();
             }
@@ -117,9 +144,64 @@ public class SelectionCanvas {
         scene.setFill(null);
         stage.setScene(scene);
         stage.show();
-
     }
 
+    public void setData(int selection){
+        switch (selection) {
+            case 1:
+                selectionInformationContainer.setEndY(selectionInformationContainer.getStartY());
+                selectionInformationContainer.setStartY((int) getPointerInfo().getLocation().getY());
+                selectionInformationContainer.setEndX((int) getPointerInfo().getLocation().getX());
+                selectionInformationContainer.setSelectionWidth(selectionInformationContainer.getEndX() - selectionInformationContainer.getStartX());
+                selectionInformationContainer.setSelectionHeight(selectionInformationContainer.getEndY() - selectionInformationContainer.getStartY());
+                selectionInformationContainer.setSelectionPixelAmmount(selectionInformationContainer.getSelectionWidth() * selectionInformationContainer.getSelectionHeight());
+                selectionInformationContainer.setSelectionRectangle(new Rectangle(
+                        selectionInformationContainer.getStartX(),
+                        selectionInformationContainer.getStartY(),
+                        selectionInformationContainer.getSelectionWidth(),
+                        selectionInformationContainer.getSelectionHeight()));
+                break;
+            case 2:
+                selectionInformationContainer.setEndX((int) getPointerInfo().getLocation().getX());
+                selectionInformationContainer.setEndY((int) getPointerInfo().getLocation().getY());
+                selectionInformationContainer.setSelectionWidth(selectionInformationContainer.getEndX() - selectionInformationContainer.getStartX());
+                selectionInformationContainer.setSelectionHeight(selectionInformationContainer.getEndY() - selectionInformationContainer.getStartY());
+                selectionInformationContainer.setSelectionPixelAmmount(selectionInformationContainer.getSelectionWidth() * selectionInformationContainer.getSelectionHeight());
+                selectionInformationContainer.setSelectionRectangle(new Rectangle(selectionInformationContainer.getStartX(),
+                        selectionInformationContainer.getStartY(),
+                        selectionInformationContainer.getSelectionWidth(),selectionInformationContainer.getSelectionHeight()));
+                break;
+            case 3:
+                selectionInformationContainer.setEndY(selectionInformationContainer.getStartY());
+                selectionInformationContainer.setEndX(selectionInformationContainer.getStartX());
+                selectionInformationContainer.setStartY((int) getPointerInfo().getLocation().getY());
+                selectionInformationContainer.setStartX((int) getPointerInfo().getLocation().getX());
+                selectionInformationContainer.setSelectionWidth(selectionInformationContainer.getEndX() - selectionInformationContainer.getStartX());
+                selectionInformationContainer.setSelectionHeight(selectionInformationContainer.getEndY() - selectionInformationContainer.getStartY());
+                selectionInformationContainer.setSelectionPixelAmmount(selectionInformationContainer.getSelectionWidth() * selectionInformationContainer.getSelectionHeight());
+                selectionInformationContainer.setSelectionRectangle(new Rectangle(
+                        selectionInformationContainer.getStartX(),
+                        selectionInformationContainer.getStartY(),
+                        selectionInformationContainer.getSelectionWidth(),
+                        selectionInformationContainer.getSelectionHeight()));
+
+                break;
+            case 4:
+                selectionInformationContainer.setEndY((int) getPointerInfo().getLocation().getY());
+                selectionInformationContainer.setEndX(selectionInformationContainer.getStartX());
+                selectionInformationContainer.setStartX((int) getPointerInfo().getLocation().getX());
+                selectionInformationContainer.setSelectionWidth(selectionInformationContainer.getEndX() - selectionInformationContainer.getStartX());
+                selectionInformationContainer.setSelectionHeight(selectionInformationContainer.getEndY() - selectionInformationContainer.getStartY());
+                selectionInformationContainer.setSelectionPixelAmmount(selectionInformationContainer.getSelectionWidth() * selectionInformationContainer.getSelectionHeight());
+                selectionInformationContainer.setSelectionRectangle(new Rectangle(
+                        selectionInformationContainer.getStartX(),
+                        selectionInformationContainer.getStartY(),
+                        selectionInformationContainer.getSelectionWidth(),
+                        selectionInformationContainer.getSelectionHeight()));
+                break;
+
+        }
+    }
     public void scanInitialPixelData(){
         BufferedImage BI = robot.createScreenCapture(selectionInformationContainer.getSelectionRectangle());
         int temp_pixelcount = selectionInformationContainer.getSelectionPixelAmmount();
@@ -135,6 +217,27 @@ public class SelectionCanvas {
             }
         }
         selectionInformationContainer.setSelectionRefreshedPixelList(selectionInformationContainer.getSelectionPixelList());
+    }
+    public void scanInitialSelectionPixelData(){
+        BufferedImage BI = robot.createScreenCapture(selectionInformationContainer.getSelectionRectangle());
+        int temp_selectionWidth = BI.getWidth();
+        int temp_selectionHeight = BI.getHeight();
+        selectionInformationContainer.setSelectionXasArray(new ArrayList(temp_selectionHeight));
+
+        for(int Yas = 0; Yas< temp_selectionHeight;Yas++){
+            ArrayList temp_sublist = new ArrayList(temp_selectionWidth);
+            for(int Xas = 0; Xas < temp_selectionWidth;Xas++){
+                temp_sublist.add(Xas,new Color(BI.getRGB(Xas, Yas)));
+                System.out.println(new Color(BI.getRGB(Xas, Yas)));
+            }
+            selectionInformationContainer.getSelectionXasArray().add(temp_sublist);
+        }
+        System.out.println("X5 Y5");
+        System.out.println(new Color((BI.getRGB(5, 5))));
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
 
@@ -187,6 +290,7 @@ public class SelectionCanvas {
                     stage.hide();
                     canvasStage.hide();
                     scanInitialPixelData();
+                    scanInitialSelectionPixelData();
 
                 }
             });

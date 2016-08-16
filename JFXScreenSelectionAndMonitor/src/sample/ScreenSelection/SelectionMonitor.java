@@ -17,6 +17,7 @@ public class SelectionMonitor {
     Stage stage;
     ImageView IV;
     Timer timer;
+    private int timerTaskTimeInMS = 10;
 
     public SelectionMonitor(SelectionInformationContainer SIC){
         this.SIC = SIC;
@@ -27,15 +28,15 @@ public class SelectionMonitor {
             new Thread() {
                 public void run() {
                     timer = new Timer();
-                    timer.schedule(new SelectionMonitorRefresher(SIC), 0, 10);
+                    timer.schedule(new SelectionMonitorRefresher(SIC), 0, timerTaskTimeInMS);
 
                 }
             }.start();
         }else{
             System.out.println("WARNING: Scanner already live!");
         }
-
     }
+
     public void createVisibleMonitor() throws AWTException {
         if(!SIC.isScannerIsLive()) {
 
@@ -77,7 +78,7 @@ public class SelectionMonitor {
                         SIC.getSelectionPixelList(),
                         IV,
                         SIC.getSelectionPixelAmmount(),
-                        SIC.getSelectionRectangle()), 0, 10);
+                        SIC.getSelectionRectangle()), 0, timerTaskTimeInMS);
             }
         }.start();
 
@@ -97,4 +98,7 @@ public class SelectionMonitor {
 
     }
 
+    public void setTimerTaskTimeInMS(int timerTaskTimeInMS) {
+        this.timerTaskTimeInMS = timerTaskTimeInMS;
+    }
 }
